@@ -6,8 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pasarela de Pago Segura</title>
     <meta name="description" content="Paga de forma rápida y segura usando Binance o Zelle.">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
@@ -32,14 +34,14 @@
                 <div class="card">
                     <div class="qr-section">
                         <div class="qr-placeholder">
-                            <img src="qr.jpeg" alt="QR Code Binance Deposit">
+                            <img src="img/qr.jpeg" alt="QR Code Binance Deposit">
                         </div>
                     </div>
 
                     <div class="details-section">
                         <div class="detail-row">
                             <span class="label">Red</span>
-                            <span class="value network"><img src="tron-trx-logo.png" alt="TRX" style="width:16px; height:16px;"> Tron (TRC20)</span>
+                            <span class="value network"><img src="img/tron-trx-logo.png" alt="TRX" style="width:16px; height:16px;"> Tron (TRC20)</span>
                         </div>
                         <div class="detail-row address-row">
                             <span class="label">Dirección</span>
@@ -52,13 +54,9 @@
                         </div>
                     </div>
 
-                    <div class="warning">
-                        ⚠️ Envía únicamente <strong>USDT</strong> (TRC20) a esta dirección.
-                    </div>
-
-                    <button class="primary-btn" id="payBtnBinance">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path></svg>
-                        Abrir y Pegar Dirección
+                    <button class="primary-btn" onclick="openReportModal('USDT TRC20')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        Reportar mi Pago
                     </button>
                 </div>
             </div>
@@ -73,25 +71,20 @@
 
                 <div class="card">
                     <div class="qr-section">
-                        <!-- El QR de Binance Pay ya tiene el logo dentro, así que quitaremos el badge y le daremos un marco más limpio -->
                         <div class="qr-placeholder" style="padding: 10px;">
-                            <img src="qr-binancepay.png" alt="QR Binance Pay">
+                            <img src="img/qr-binancepay.png" alt="QR Binance Pay">
                         </div>
                     </div>
 
-                    <div class="details-section" style="margin-bottom: 12px; padding: 10px;">
+                    <div class="details-section" style="margin-bottom: 20px; padding: 12px;">
                         <p style="font-size: 13px; text-align: center; color: var(--text-primary); line-height: 1.5; font-weight: 500;">
-                            Escanea este código o guárdalo como imagen/captura de pantalla para elegirlo desde tu app de Binance y pagar directamente.
+                            Escanea este código o guárdalo como imagen para elegirlo desde tu app de Binance y pagar directamente.
                         </p>
                     </div>
 
-                    <div class="warning" style="background: rgba(252, 213, 53, 0.1); border-color: var(--brand-color); color: var(--brand-color);">
-                        💡 <strong>Tip:</strong> Puedes enviar cualquier criptomoneda, llegará de forma instantánea.
-                    </div>
-
-                    <button class="primary-btn" id="payBtnPay">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"></path><path d="M17 3h2a2 2 0 0 1 2 2v2"></path><path d="M21 17v2a2 2 0 0 1-2 2h-2"></path><path d="M7 21H5a2 2 0 0 1-2-2v-2"></path><rect x="7" y="7" width="10" height="10" rx="1"></rect></svg>
-                        Abrir App para Escanear
+                    <button class="primary-btn" onclick="openReportModal('Binance Pay')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        Reportar mi Pago
                     </button>
                 </div>
             </div>
@@ -128,122 +121,103 @@
                         </div>
                     </div>
 
-                    <div class="warning">
-                        ⚠️ Por favor, asegúrate de colocar el <strong>nombre exacto</strong> antes de confirmar.
-                    </div>
-
-                    <button class="primary-btn" id="payBtnZelle">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
-                        Abrir App de tu Banco
+                    <button class="primary-btn" onclick="openReportModal('Zelle')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        Reportar mi Pago
                     </button>
                 </div>
             </div>
 
         </div>
+
+        <!-- TRACKER BUTTON (Trazabilidad) -->
+        <div style="text-align: center; margin-top: 25px;">
+            <button class="secondary-btn" onclick="openTrackerModal()" style="font-size: 13px; font-weight: 600; padding: 12px 20px; background: rgba(255,255,255,0.05); color: var(--text-secondary); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; cursor: pointer; display: inline-flex; align-items: center;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                Rastrear Estado de mi Pago
+            </button>
+        </div>
         
-        <footer>
+        <footer style="margin-top: 25px;">
             Transacciones seguras y encriptadas de extremo a extremo.
         </footer>
     </div>
     
+    <!-- MODAL DE REPORTE DE PAGO -->
+    <div class="modal-overlay" id="reportModal">
+        <div class="modal-content card" style="margin: 0 15px;">
+            <button class="close-btn" onclick="closeModal()">✕</button>
+            <h2 style="margin-bottom: 2px;">Reportar Pago</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 14px;">Método: <strong id="modalMethod" style="color: var(--brand-color);"></strong></p>
+            
+            <form id="reportForm">
+                <div class="form-group">
+                    <label>Tu Nombre o Usuario</label>
+                    <input type="text" id="payerName" required placeholder="Ej. Johan Lennon">
+                </div>
+                
+                <div class="form-group">
+                    <label>Número de Referencia (Opcional)</label>
+                    <input type="text" id="payerRef" placeholder="Ej. 1293847">
+                </div>
+
+                <div class="form-group" style="margin-top: 20px;">
+                    <label>Comprobante de Pago</label>
+                    <div class="file-upload" id="fileUploadContainer">
+                       <input type="file" id="receiptFile" accept="image/*" required>
+                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 5px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                       <div id="fileName">Toca para subir una imagen</div>
+                    </div>
+                </div>
+
+                <button type="submit" class="primary-btn" id="submitReportBtn" style="margin-top: 30px;">
+                    Enviar Soporte
+                </button>
+            </form>
+            
+            <!-- Loading State -->
+            <div id="loadingState" style="display:none; text-align:center; padding: 30px 0;">
+                <svg class="spinner" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--brand-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation: spin 1s linear infinite;"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg>
+                <p style="margin-top: 20px; font-weight: 500;">Validando información y subiendo imagen...</p>
+            </div>
+
+            <!-- Success State -->
+            <div id="successState" style="display:none; text-align:center; padding: 20px 0;">
+                <div style="width: 60px; height: 60px; background: rgba(2, 192, 118, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#02C076" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+                <h3 style="color: #02C076; font-size: 22px; margin-bottom: 5px;">Soporte en Revisión</h3>
+                <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.5;">El soporte de pago ha sido enviado al administrador con éxito. Pronto procesaremos tu orden una vez validado.</p>
+                <button type="button" class="primary-btn" onclick="closeModal()" style="margin-top: 25px;">Volver</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL RASTREADOR DE PAGO (Nuevo) -->
+    <div class="modal-overlay" id="trackerModal">
+        <div class="modal-content card" style="margin: 0 15px;">
+            <button class="close-btn" onclick="closeTracker()">✕</button>
+            <h2 style="margin-bottom: 8px;">Rastrear Mi Pago</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 25px; font-size: 14px;">Consulta el estado actual de tu transferencia al instante.</p>
+            
+            <form onsubmit="searchPayment(event)">
+                <div class="form-group">
+                    <label>Tu Nombre Exacto o N° Referencia</label>
+                    <input type="text" id="searchRef" required placeholder="Ej. 1293847 o Johan Lennon">
+                </div>
+                <button type="submit" class="primary-btn" id="searchBtn" style="margin-top: 20px; background: #fff; color: #000;">
+                    Consultar Estado
+                </button>
+            </form>
+            
+            <div id="searchResult"></div>
+        </div>
+    </div>
+
     <div id="toast" class="toast">¡Copiado al portapapeles!</div>
 
-    <script>
-        const copyBtns = document.querySelectorAll('.copy-btn');
-        const toast = document.getElementById('toast');
-        const tabs = document.querySelectorAll('.tab-btn');
-        const views = {
-            binance: document.getElementById('view-binance'),
-            binancepay: document.getElementById('view-binancepay'),
-            zelle: document.getElementById('view-zelle')
-        };
-        let currentView = 'binance';
-
-        // Lógica de pestañas para cambiar vistas y temas
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const target = tab.dataset.target;
-                if (currentView === target) return;
-
-                document.querySelector('.tab-btn.active').classList.remove('active');
-                tab.classList.add('active');
-
-                // Aplicar un crossfade/zoom
-                views[currentView].classList.remove('active');
-                views[target].classList.add('active');
-
-                if (target === 'zelle') {
-                    document.body.classList.add('theme-zelle');
-                } else {
-                    document.body.classList.remove('theme-zelle');
-                }
-                
-                currentView = target;
-            });
-        });
-
-        // Lógica para copiar datos al portapapeles
-        copyBtns.forEach(btn => {
-            btn.addEventListener('click', async () => {
-                const textToCopy = btn.dataset.copy;
-                try {
-                    await navigator.clipboard.writeText(textToCopy);
-                    const t = document.getElementById('toast');
-                    t.innerHTML = "¡Copiado con éxito!";
-                    showToast();
-                    setTimeout(() => { t.innerHTML = "¡Copiado al portapapeles!"; }, 3000);
-                } catch (err) {
-                    const textArea = document.createElement("textarea");
-                    textArea.value = textToCopy;
-                    document.body.appendChild(textArea);
-                    textArea.select();
-                    try { document.execCommand('copy'); showToast(); } catch (e) { }
-                    document.body.removeChild(textArea);
-                }
-            });
-        });
-
-        function showToast() {
-            if (currentView === 'zelle') {
-                toast.classList.add('theme-zelle-toast');
-            } else {
-                toast.classList.remove('theme-zelle-toast');
-            }
-            toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-
-        // Botones principales (Solo copian y avisan para evitar errores nativos en Safari)
-        document.getElementById('payBtnBinance').addEventListener('click', () => {
-            const address = "THTfqM2ZYhVG49emCotLsAAwje3M5BFe8J";
-            try {
-                navigator.clipboard.writeText(address);
-                const t = document.getElementById('toast');
-                t.innerHTML = "¡Dirección copiada! Ahora abre Binance";
-                showToast();
-                setTimeout(() => { t.innerHTML = "¡Copiado al portapapeles!"; }, 3000);
-            } catch (e) {}
-        });
-
-        document.getElementById('payBtnPay').addEventListener('click', () => {
-            const t = document.getElementById('toast');
-            t.innerHTML = "¡Guarda tu código y abre Binance!";
-            showToast();
-            setTimeout(() => { t.innerHTML = "¡Copiado al portapapeles!"; }, 3000);
-        });
-
-        document.getElementById('payBtnZelle').addEventListener('click', () => {
-            const email = "johanlennon20@gmail.com";
-            try {
-                navigator.clipboard.writeText(email);
-                const t = document.getElementById('toast');
-                t.innerHTML = "¡Correo copiado! Abre tu App del banco";
-                showToast();
-                setTimeout(() => { t.innerHTML = "¡Copiado al portapapeles!"; }, 3000);
-            } catch (e) {}
-        });
-    </script>
+    <!-- Enlaces a los nuevos scripts separados por carpetas -->
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
