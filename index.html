@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binance Pay - USDT Deposit</title>
+    <meta name="description" content="Paga de forma rápida y segura usando USDT en la red TRC20 con Binance.">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e8/Binance_Logo.svg" alt="Binance Logo"
+                class="binance-logo">
+            <h1>Deposita USDT</h1>
+            <p>Envía fondos de forma segura y rápida a través de la red Tron (TRC20).</p>
+        </header>
+
+        <div class="card">
+            <div class="qr-section">
+                <div class="qr-placeholder">
+                    <img src="qr.jpeg" alt="QR Code Binance Deposit">
+
+                </div>
+            </div>
+
+            <div class="details-section">
+                <div class="detail-row">
+                    <span class="label">Red</span>
+                    <span class="value network"><img src="tron-trx-logo.png" alt="TRX"> Tron (TRC20)</span>
+                </div>
+
+                <div class="detail-row address-row">
+                    <span class="label">Dirección</span>
+                    <div class="address-container">
+                        <span class="value address" id="cryptoAddress">THTfqM2ZYhVG49emCotLsAAwje3M5BFe8J</span>
+                        <button class="copy-btn" id="copyBtn" aria-label="Copiar Dirección">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="warning">
+                ⚠️ Envía únicamente <strong>USDT</strong> a esta dirección de depósito. Asegúrate de seleccionar la red
+                <strong>TRC20</strong>.
+            </div>
+
+            <div class="actions">
+                <button class="primary-btn" id="payBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path>
+                        <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path>
+                        <path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path>
+                    </svg>
+                    Abrir App de Billetera
+                </button>
+            </div>
+        </div>
+
+        <footer>
+            Protegido por tecnología blockchain. Confirmación inmediata.
+        </footer>
+    </div>
+
+    <div id="toast" class="toast">Dirección copiada al portapapeles</div>
+
+    <script>
+        const address = "THTfqM2ZYhVG49emCotLsAAwje3M5BFe8J";
+        const copyBtn = document.getElementById('copyBtn');
+        const toast = document.getElementById('toast');
+        const payBtn = document.getElementById('payBtn');
+
+        copyBtn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(address);
+                showToast();
+            } catch (err) {
+                // Autocopy fallback
+                const textArea = document.createElement("textarea");
+                textArea.value = address;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast();
+                } catch (e) {
+                    console.error('Error al copiar: ', e);
+                }
+                document.body.removeChild(textArea);
+            }
+        });
+
+        function showToast() {
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        payBtn.addEventListener('click', () => {
+            // Un enlace deep link de billetera estándar para TRON
+            window.location.href = `tron:${address}`;
+
+            // Mensaje informativo por si la wallet no intercepta el URI
+            setTimeout(() => {
+                alert("Si tu billetera no se abre automáticamente, hemos copiado la dirección. Pégala directamente en Binance o en tu billetera preferida para enviar el pago.");
+                navigator.clipboard.writeText(address);
+            }, 1000);
+        });
+    </script>
+</body>
+
+</html>
