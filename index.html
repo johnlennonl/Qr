@@ -15,12 +15,13 @@
         
         <!-- Pestañas Switcher -->
         <div class="tab-switcher">
-            <button class="tab-btn active" data-target="binance">Binance</button>
+            <button class="tab-btn active" data-target="binance">TRC20</button>
+            <button class="tab-btn" data-target="binancepay">Binance Pay</button>
             <button class="tab-btn" data-target="zelle">Zelle</button>
         </div>
 
         <div class="cards-wrapper">
-            <!-- VISTA BINANCE -->
+            <!-- VISTA BINANCE TRC20 -->
             <div class="view-item active" id="view-binance">
                 <header>
                     <img src="https://upload.wikimedia.org/wikipedia/commons/e/e8/Binance_Logo.svg" alt="Binance Logo" class="brand-logo">
@@ -57,7 +58,40 @@
 
                     <button class="primary-btn" id="payBtnBinance">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path></svg>
-                        Abrir Billetera / App
+                        Abrir y Pegar Dirección
+                    </button>
+                </div>
+            </div>
+
+            <!-- VISTA BINANCE PAY -->
+            <div class="view-item" id="view-binancepay">
+                <header>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e8/Binance_Logo.svg" alt="Binance Logo" class="brand-logo">
+                    <h1 style="color: var(--brand-color);">Binance Pay</h1>
+                    <p>Transferencia instantánea sin comisiones.</p>
+                </header>
+
+                <div class="card">
+                    <div class="qr-section">
+                        <!-- El QR de Binance Pay ya tiene el logo dentro, así que quitaremos el badge y le daremos un marco más limpio -->
+                        <div class="qr-placeholder" style="padding: 10px;">
+                            <img src="qr-binancepay.png" alt="QR Binance Pay">
+                        </div>
+                    </div>
+
+                    <div class="details-section" style="margin-bottom: 12px; padding: 10px;">
+                        <p style="font-size: 13px; text-align: center; color: var(--text-primary); line-height: 1.5; font-weight: 500;">
+                            Escanea este código o guárdalo como imagen/captura de pantalla para elegirlo desde tu app de Binance y pagar directamente.
+                        </p>
+                    </div>
+
+                    <div class="warning" style="background: rgba(252, 213, 53, 0.1); border-color: var(--brand-color); color: var(--brand-color);">
+                        💡 <strong>Tip:</strong> Puedes enviar cualquier criptomoneda, llegará de forma instantánea.
+                    </div>
+
+                    <button class="primary-btn" id="payBtnPay">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"></path><path d="M17 3h2a2 2 0 0 1 2 2v2"></path><path d="M21 17v2a2 2 0 0 1-2 2h-2"></path><path d="M7 21H5a2 2 0 0 1-2-2v-2"></path><rect x="7" y="7" width="10" height="10" rx="1"></rect></svg>
+                        Abrir App para Escanear
                     </button>
                 </div>
             </div>
@@ -79,7 +113,7 @@
                         <div class="detail-row address-row">
                             <span class="label">Correo Electrónico de Zelle</span>
                             <div class="address-container">
-                                <span class="value address" style="font-family: inherit; font-size: 16px;">johanlennon20@gmail.com</span>
+                                <span class="value address" style="font-family: inherit; font-size: 15px;">johanlennon20@gmail.com</span>
                                 <button class="copy-btn" data-copy="johanlennon20@gmail.com" aria-label="Copiar Correo">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                                 </button>
@@ -89,7 +123,7 @@
                         <div class="detail-row address-row" style="margin-top: 5px;">
                             <span class="label">Titular de la Cuenta</span>
                             <div class="address-container">
-                                <span class="value address" style="font-family: inherit; font-size: 16px; color: var(--text-primary);">Johan Lennon</span>
+                                <span class="value address" style="font-family: inherit; font-size: 15px; color: var(--text-primary);">Johan Lennon</span>
                             </div>
                         </div>
                     </div>
@@ -120,8 +154,10 @@
         const tabs = document.querySelectorAll('.tab-btn');
         const views = {
             binance: document.getElementById('view-binance'),
+            binancepay: document.getElementById('view-binancepay'),
             zelle: document.getElementById('view-zelle')
         };
+        const viewOrder = ['binance', 'binancepay', 'zelle'];
         let currentView = 'binance';
 
         // Lógica de pestañas para cambiar vistas y temas
@@ -133,10 +169,8 @@
                 document.querySelector('.tab-btn.active').classList.remove('active');
                 tab.classList.add('active');
 
+                // Aplicar un crossfade/zoom con la clase .scaled-out en lugar de slide-left/right para 3 pestañas
                 views[currentView].classList.remove('active');
-                views[currentView].classList.add(target === 'zelle' ? 'slide-left' : 'slide-right');
-
-                views[target].classList.remove('slide-left', 'slide-right');
                 views[target].classList.add('active');
 
                 if (target === 'zelle') {
@@ -155,14 +189,16 @@
         const cardsWrapper = document.querySelector('.cards-wrapper');
 
         function handleSwipe() {
-            // Umbral de 50px para considerar que es un "swipe" intencional
-            if (touchendX < touchstartX - 50) {
-                // Swipe hacia la izquierda: Pasar a Zelle (si estamos en Binance)
-                if (currentView === 'binance') document.querySelector('[data-target="zelle"]').click();
+            // Umbral de 50px para considerarlo un "swipe" intencional
+            const index = viewOrder.indexOf(currentView);
+            
+            if (touchendX < touchstartX - 50 && index < viewOrder.length - 1) {
+                // Swipe a la izquierda -> siguiente vista
+                document.querySelector(`[data-target="${viewOrder[index + 1]}"]`).click();
             }
-            if (touchendX > touchstartX + 50) {
-                // Swipe hacia la derecha: Pasar a Binance (si estamos en Zelle)
-                if (currentView === 'zelle') document.querySelector('[data-target="binance"]').click();
+            if (touchendX > touchstartX + 50 && index > 0) {
+                // Swipe a la derecha -> vista anterior
+                document.querySelector(`[data-target="${viewOrder[index - 1]}"]`).click();
             }
         }
 
@@ -181,18 +217,16 @@
                 const textToCopy = btn.dataset.copy;
                 try {
                     await navigator.clipboard.writeText(textToCopy);
+                    const t = document.getElementById('toast');
+                    t.innerHTML = "¡Copiado con éxito!";
                     showToast();
+                    setTimeout(() => { t.innerHTML = "¡Copiado al portapapeles!"; }, 3000);
                 } catch (err) {
                     const textArea = document.createElement("textarea");
                     textArea.value = textToCopy;
                     document.body.appendChild(textArea);
                     textArea.select();
-                    try {
-                        document.execCommand('copy');
-                        showToast();
-                    } catch (e) {
-                        console.error('Error al copiar: ', e);
-                    }
+                    try { document.execCommand('copy'); showToast(); } catch (e) { }
                     document.body.removeChild(textArea);
                 }
             });
@@ -213,30 +247,30 @@
         // Botones principales
         document.getElementById('payBtnBinance').addEventListener('click', () => {
             const address = "THTfqM2ZYhVG49emCotLsAAwje3M5BFe8J";
-            
-            // Primero aseguramos copiar la dirección
+            window.location.href = "binance://";
             try {
                 navigator.clipboard.writeText(address);
+                const t = document.getElementById('toast');
+                t.innerHTML = "¡Copiado! Pégala en Binance";
                 showToast();
+                setTimeout(() => { t.innerHTML = "¡Copiado al portapapeles!"; }, 3000);
             } catch (e) {}
+        });
 
-            // Intenta abrir directamente la aplicación de Binance
+        document.getElementById('payBtnPay').addEventListener('click', () => {
+            // Abrimos Binance para que puedan escanear el QR guardado en su librería
             window.location.href = "binance://";
-            
-            // Explicación de qué hacer
-            setTimeout(() => {
-                alert("¡Dirección copiada!\n\nSe está abriendo Binance. Ve a la opción de 'Retirar' (Withdraw) USDT por la red Tron (TRC20) y pega la dirección.");
-            }, 500);
         });
 
         document.getElementById('payBtnZelle').addEventListener('click', () => {
             const email = "johanlennon20@gmail.com";
-            // Zelle usually opens via bank apps. There's no universal deep link, 
-            // so we copy the email and prompt them to open their bank app.
             try {
                 navigator.clipboard.writeText(email);
+                const t = document.getElementById('toast');
+                t.innerHTML = "¡Correo copiado! Abre tu App del banco";
+                showToast();
+                setTimeout(() => { t.innerHTML = "¡Copiado al portapapeles!"; }, 3000);
             } catch (e) {}
-            alert("El correo de Zelle (johanlennon20@gmail.com) ha sido copiado.\n\nAbre la aplicación de tu banco para realizar el envío a nombre de Johan Lennon.");
         });
     </script>
 </body>
