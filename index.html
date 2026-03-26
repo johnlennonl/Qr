@@ -157,7 +157,6 @@
             binancepay: document.getElementById('view-binancepay'),
             zelle: document.getElementById('view-zelle')
         };
-        const viewOrder = ['binance', 'binancepay', 'zelle'];
         let currentView = 'binance';
 
         // Lógica de pestañas para cambiar vistas y temas
@@ -169,7 +168,7 @@
                 document.querySelector('.tab-btn.active').classList.remove('active');
                 tab.classList.add('active');
 
-                // Aplicar un crossfade/zoom con la clase .scaled-out en lugar de slide-left/right para 3 pestañas
+                // Aplicar un crossfade/zoom
                 views[currentView].classList.remove('active');
                 views[target].classList.add('active');
 
@@ -181,34 +180,6 @@
                 
                 currentView = target;
             });
-        });
-
-        // Lógica de Desplazamiento (Swipe) táctil
-        let touchstartX = 0;
-        let touchendX = 0;
-        const cardsWrapper = document.querySelector('.cards-wrapper');
-
-        function handleSwipe() {
-            // Umbral de 50px para considerarlo un "swipe" intencional
-            const index = viewOrder.indexOf(currentView);
-            
-            if (touchendX < touchstartX - 50 && index < viewOrder.length - 1) {
-                // Swipe a la izquierda -> siguiente vista
-                document.querySelector(`[data-target="${viewOrder[index + 1]}"]`).click();
-            }
-            if (touchendX > touchstartX + 50 && index > 0) {
-                // Swipe a la derecha -> vista anterior
-                document.querySelector(`[data-target="${viewOrder[index - 1]}"]`).click();
-            }
-        }
-
-        cardsWrapper.addEventListener('touchstart', e => {
-            touchstartX = e.changedTouches[0].screenX;
-        }, { passive: true });
-
-        cardsWrapper.addEventListener('touchend', e => {
-            touchendX = e.changedTouches[0].screenX;
-            handleSwipe();
         });
 
         // Lógica para copiar datos al portapapeles
@@ -244,22 +215,23 @@
             }, 3000);
         }
 
-        // Botones principales
+        // Botones principales (Solo copian y avisan para evitar errores nativos en Safari)
         document.getElementById('payBtnBinance').addEventListener('click', () => {
             const address = "THTfqM2ZYhVG49emCotLsAAwje3M5BFe8J";
-            window.location.href = "binance://";
             try {
                 navigator.clipboard.writeText(address);
                 const t = document.getElementById('toast');
-                t.innerHTML = "¡Copiado! Pégala en Binance";
+                t.innerHTML = "¡Dirección copiada! Ahora abre Binance";
                 showToast();
                 setTimeout(() => { t.innerHTML = "¡Copiado al portapapeles!"; }, 3000);
             } catch (e) {}
         });
 
         document.getElementById('payBtnPay').addEventListener('click', () => {
-            // Abrimos Binance para que puedan escanear el QR guardado en su librería
-            window.location.href = "binance://";
+            const t = document.getElementById('toast');
+            t.innerHTML = "¡Guarda tu código y abre Binance!";
+            showToast();
+            setTimeout(() => { t.innerHTML = "¡Copiado al portapapeles!"; }, 3000);
         });
 
         document.getElementById('payBtnZelle').addEventListener('click', () => {
