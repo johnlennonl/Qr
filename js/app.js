@@ -128,6 +128,25 @@ document.getElementById('reportForm').addEventListener('submit', async (e) => {
 
         if (insertError) throw new Error("Error guardando reporte: " + insertError.message);
 
+        // Disparar Notificación de Telegram (Opcional - Silencioso)
+        if (typeof TELEGRAM_BOT_TOKEN !== 'undefined' && TELEGRAM_BOT_TOKEN !== '' && TELEGRAM_CHAT_ID !== '') {
+            try {
+                const textMsg = `🚨 <b>¡NUEVO PAGO RECIBIDO!</b> 🚨\n\n👤 <b>Cliente:</b> ${name}\n🧾 <b>Referencia:</b> ${ref || 'No indicada'}\n💳 <b>Método:</b> ${activeMethodName}\n\n<a href="${publicUrl}">Ver Comprobante Adjunto</a>\n\n⚠️ <i>Entra a tu Dashboard Privado para Aprobar este pago.</i>`;
+                
+                await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CHAT_ID,
+                        text: textMsg,
+                        parse_mode: 'HTML'
+                    })
+                });
+            } catch (telegramErr) {
+                console.warn("No se pudo enviar noti a Telegram", telegramErr);
+            }
+        }
+
         document.getElementById('loadingState').style.display = 'none';
         document.getElementById('successState').style.display = 'block';
     } catch (error) {
