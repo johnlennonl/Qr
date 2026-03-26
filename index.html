@@ -149,6 +149,32 @@
             });
         });
 
+        // Lógica de Desplazamiento (Swipe) táctil
+        let touchstartX = 0;
+        let touchendX = 0;
+        const cardsWrapper = document.querySelector('.cards-wrapper');
+
+        function handleSwipe() {
+            // Umbral de 50px para considerar que es un "swipe" intencional
+            if (touchendX < touchstartX - 50) {
+                // Swipe hacia la izquierda: Pasar a Zelle (si estamos en Binance)
+                if (currentView === 'binance') document.querySelector('[data-target="zelle"]').click();
+            }
+            if (touchendX > touchstartX + 50) {
+                // Swipe hacia la derecha: Pasar a Binance (si estamos en Zelle)
+                if (currentView === 'zelle') document.querySelector('[data-target="binance"]').click();
+            }
+        }
+
+        cardsWrapper.addEventListener('touchstart', e => {
+            touchstartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        cardsWrapper.addEventListener('touchend', e => {
+            touchendX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
         // Lógica para copiar datos al portapapeles
         copyBtns.forEach(btn => {
             btn.addEventListener('click', async () => {
