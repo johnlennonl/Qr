@@ -187,11 +187,20 @@
         // Botones principales
         document.getElementById('payBtnBinance').addEventListener('click', () => {
             const address = "THTfqM2ZYhVG49emCotLsAAwje3M5BFe8J";
-            window.location.href = `tron:${address}`;
-            setTimeout(() => {
-                alert("Si la aplicación no abrió automáticamente, la dirección ya fue copiada. Pégala en Binance.");
+            
+            // Primero aseguramos copiar la dirección
+            try {
                 navigator.clipboard.writeText(address);
-            }, 1000);
+                showToast();
+            } catch (e) {}
+
+            // Intenta abrir directamente la aplicación de Binance
+            window.location.href = "binance://";
+            
+            // Explicación de qué hacer
+            setTimeout(() => {
+                alert("¡Dirección copiada!\n\nSe está abriendo Binance. Ve a la opción de 'Retirar' (Withdraw) USDT por la red Tron (TRC20) y pega la dirección.");
+            }, 500);
         });
 
         document.getElementById('payBtnZelle').addEventListener('click', () => {
