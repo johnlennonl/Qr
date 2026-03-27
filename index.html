@@ -7,7 +7,7 @@
     <title>Pasarela de Pago Segura</title>
     <meta name="description" content="Paga de forma rápida y segura usando Binance o Zelle.">
     <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Supabase CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -15,14 +15,16 @@
 <body>
     <div class="container">
         
-        <!-- Pestañas Switcher -->
-        <div class="tab-switcher">
-            <button class="tab-btn active" data-target="binance">TRC20</button>
-            <button class="tab-btn" data-target="binancepay">Binance Pay</button>
-            <button class="tab-btn" data-target="zelle">Zelle</button>
-        </div>
+        <!-- Contenedor Maestro de Tienda Activa -->
+        <div id="paymentMethodsContainer">
+            <!-- Pestañas Switcher -->
+            <div class="tab-switcher">
+                <button class="tab-btn active" data-target="binance">TRC20</button>
+                <button class="tab-btn" data-target="binancepay">Binance Pay</button>
+                <button class="tab-btn" id="zelleTabBtn" data-target="zelle">Zelle</button>
+            </div>
 
-        <div class="cards-wrapper">
+            <div class="cards-wrapper">
             <!-- VISTA BINANCE TRC20 -->
             <div class="view-item active" id="view-binance">
                 <header>
@@ -106,8 +108,8 @@
                         <div class="detail-row address-row">
                             <span class="label">Correo Electrónico de Zelle</span>
                             <div class="address-container">
-                                <span class="value address" style="font-family: inherit; font-size: 15px;">johanlennon20@gmail.com</span>
-                                <button class="copy-btn" data-copy="johanlennon20@gmail.com" aria-label="Copiar Correo">
+                                <span class="value address" id="zelleDisplayEmail" style="font-family: inherit; font-size: 15px;">johanlennon20@gmail.com</span>
+                                <button class="copy-btn" id="zelleCopyBtn" data-copy="johanlennon20@gmail.com" aria-label="Copiar Correo">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                                 </button>
                             </div>
@@ -116,7 +118,7 @@
                         <div class="detail-row address-row" style="margin-top: 5px;">
                             <span class="label">Titular de la Cuenta</span>
                             <div class="address-container">
-                                <span class="value address" style="font-family: inherit; font-size: 15px; color: var(--text-primary);">Johan Lennon</span>
+                                <span class="value address" id="zelleDisplayName" style="font-family: inherit; font-size: 15px; color: var(--text-primary);">Johan Lennon</span>
                             </div>
                         </div>
                     </div>
@@ -128,6 +130,25 @@
                 </div>
             </div>
 
+            </div> <!-- Fin de cards-wrapper -->
+        </div> <!-- Fin de paymentMethodsContainer -->
+
+        <!-- VISTA DE TIENDA CERRADA (Simplificada para máxima compatibilidad) -->
+        <div id="storeClosedMessage" style="display: none; text-align: center; padding: 40px 20px; background-color: #181A20; border: 1px solid #2B3139; border-radius: 24px; max-width: 440px; margin: 20px auto; color: #ffffff; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
+            <div style="width: 80px; height: 80px; background-color: rgba(246, 70, 93, 0.15); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 20px auto; color: #F6465D;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            </div>
+            
+            <h2 style="font-size: 26px; font-weight: 800; margin-bottom: 15px; color: #ffffff !important;">Horario Concluido</h2>
+            <p style="color: #848E9C !important; font-size: 15px; line-height: 1.6; margin-bottom: 25px;">
+                Nuestro portal de pagos está temporalmente fuera de servicio por horario de descanso.
+                <br><br>
+                Seguimos protegiendo tu inversión. Volveremos a operar con normalidad en pocas horas.
+            </p>
+            
+            <div style="display: inline-block; padding: 10px 20px; background-color: rgba(252, 213, 53, 0.1); border-radius: 10px; color: #FCD535; font-weight: 700; font-size: 13px; text-transform: uppercase; border: 1px solid rgba(252,213,53,0.2);">
+                ¡Gracias por tu paciencia!
+            </div>
         </div>
 
         <!-- TRACKER BUTTON (Trazabilidad) -->

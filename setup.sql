@@ -21,3 +21,23 @@ insert into storage.buckets (id, name, public) values ('receipts', 'receipts', t
 create policy "Public Access to Receipts Uploads" on storage.objects for insert to public with check ( bucket_id = 'receipts' );
 create policy "Public Access to Receipts Reads" on storage.objects for select to public using ( bucket_id = 'receipts' );
 create policy "Public Access to Receipts Updates" on storage.objects for update to public using ( bucket_id = 'receipts' );
+
+-- 5. Habilitar Tiempo Real (Realtime) para la tabla de pagos
+alter publication supabase_realtime add table payments;
+
+-- 6. Crear tabla de configuraciones dinámicas y poblar datos iniciales
+create table public.settings (
+  id text primary key,
+  value jsonb
+);
+
+-- Desactivar seguridad en tabla de ajustes para fácil acceso desde el portal
+alter table public.settings disable row level security;
+
+-- Insertar configuración inicial de Zelle
+insert into public.settings (id, value) 
+values ('zelle_config', '{"active": true, "email": "johanlennon20@gmail.com", "name": "Johan Lennon"}');
+
+-- Insertar configuración de Operatividad de Tienda
+insert into public.settings (id, value)
+values ('store_status', '{"is_open": true}');

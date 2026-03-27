@@ -31,6 +31,66 @@ tabs.forEach(tab => {
     });
 });
 
+// Cargar configuraciones dinámicas de la base de datos
+window.loadDynamicSettings = async function() {
+    try {
+        if (!dbClient) return;
+        
+        // 1. Verificar Estado Operativo de la Tienda
+        const { data: storeData } = await dbClient.from('settings').select('value').eq('id', 'store_status').single();
+        const isOpen = storeData?.value ? storeData.value.is_open : true;
+        console.log("Portal Status:", isOpen ? "Abierto" : "Cerrado");
+
+        const container = document.getElementById('paymentMethodsContainer');
+        const closedMsg = document.getElementById('storeClosedMessage');
+        
+        if (!isOpen) {
+            // Tienda cerrada: Ocultar todo y mostrar aviso
+            if(container) container.style.display = 'none';
+            if(closedMsg) closedMsg.style.display = 'block';
+            return; 
+        } else {
+            // Tienda Abierta: Asegurar que se muestre todo
+            if(container) container.style.display = 'block';
+            if(closedMsg) closedMsg.style.display = 'none';
+        }
+
+        // 2. Cargar Zelle Config
+        const { data, error } = await dbClient.from('settings').select('value').eq('id', 'zelle_config').single();
+        if (data && data.value) {
+            const config = data.value;
+            const zelleTabBtn = document.getElementById('zelleTabBtn');
+            
+            if (!config.active) {
+                // Esconder Zelle por completo
+                if (zelleTabBtn) zelleTabBtn.style.display = 'none';
+                
+                // Si el usuario por casualidad estaba en Zelle, mandarlo a Binance
+                if (currentView === 'zelle') {
+                    document.querySelector('.tab-btn[data-target="binance"]').click();
+                }
+            } else {
+                if (zelleTabBtn) zelleTabBtn.style.display = 'inline-block';
+                
+                // Actualizar textos
+                const elEmail = document.getElementById('zelleDisplayEmail');
+                const elName = document.getElementById('zelleDisplayName');
+                const btnCopy = document.getElementById('zelleCopyBtn');
+                
+                if (elEmail) elEmail.innerText = config.email;
+                if (elName) elName.innerText = config.name;
+                if (btnCopy) btnCopy.dataset.copy = config.email;
+            }
+        }
+    } catch(e) {
+        console.warn("Ajustes dinámicos no cargaron o no existen aún.", e);
+    }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadDynamicSettings();
+});
+
 // Portapapeles
 copyBtns.forEach(btn => {
     btn.addEventListener('click', async () => {
